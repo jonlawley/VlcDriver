@@ -2,7 +2,12 @@
 
 namespace VLCDriver
 {
-    public class VideoConfiguration : IConfiguration
+    public interface IVideoConfiguration
+    {
+        string GetPartArguments();
+    }
+
+    public class VideoConfiguration : IConfiguration, IVideoConfiguration
     {
         public enum VlcVideoFormat { h264, Mpeg2 };
         public enum VideoScale { None, Auto , half, quarter, one};
@@ -19,7 +24,7 @@ namespace VLCDriver
             Mpg2Vb = 800;
         }
 
-        public string Arguments()
+        public string GetPartArguments()
         {
             string vCodecName;
             switch(Format)

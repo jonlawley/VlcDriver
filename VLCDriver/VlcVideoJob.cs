@@ -2,17 +2,17 @@
 {
     public class VlcVideoJob : VlcJob
     {
-        public VlcVideoJob(VideoConfiguration videoConfiguration, AudioConfiguration audioConfiguration)
+        public VlcVideoJob(IVideoConfiguration videoConfiguration, IAudioConfiguration audioConfiguration)
         {
             VideoConfiguration = videoConfiguration;
             AudioConfiguration = audioConfiguration;
         }
 
-        public VideoConfiguration VideoConfiguration { get; protected set; }
+        public IVideoConfiguration VideoConfiguration { get; protected set; }
 
         protected override string GetSpecificJobTypeArguments()
         {
-            return string.Format("{0},{1}",VideoConfiguration.Arguments(), AudioConfiguration.Arguments());
+            return string.Format("{0},{1}",VideoConfiguration.GetPartArguments(), AudioConfiguration.GetPartArguments());
         }
     }
 }

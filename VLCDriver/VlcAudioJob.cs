@@ -4,7 +4,7 @@ namespace VLCDriver
 {
     public class VlcAudioJob : VlcJob
     {
-        public VlcAudioJob(AudioConfiguration audioConfig)
+        public VlcAudioJob(IAudioConfiguration audioConfig)
         {
             if(audioConfig == null)
             {
@@ -15,7 +15,7 @@ namespace VLCDriver
 
         protected override string GetSpecificJobTypeArguments()
         {
-            return string.Format("vcodec=none,{0}", AudioConfiguration.Arguments());
+            return string.Format("vcodec=none,{0}", AudioConfiguration.GetPartArguments());
         }
     }
 }

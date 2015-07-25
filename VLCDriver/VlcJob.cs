@@ -10,10 +10,9 @@ namespace VLCDriver
         public FileInfo InputFile { get; set; }
         public FileInfo OutputFile { get; set; }
         public bool QuitAfer { get; set; }
-        private const string interfaceStr = "-I dummy";
+        private const string InterfaceStr = "-I dummy";
 
-        public AudioConfiguration AudioConfiguration { get { return audioConfiguration; } protected set { audioConfiguration = value; } }
-        private AudioConfiguration audioConfiguration;
+        public IAudioConfiguration AudioConfiguration { get; protected set; }
 
         //Todo, Generate New FileName based on input file
 
@@ -25,7 +24,7 @@ namespace VLCDriver
 
             var transcodeArgs = GetSpecificJobTypeArguments();
             var quitAfter = QuitAfer ? vlcQuitString : string.Empty;
-            var arguments = string.Format("{0} \"{1}\" \":sout=#transcode{{{2}}}:std{{dst='{3}',access=file}}\"{4}", interfaceStr ,InputFile.FullName, transcodeArgs, OutputFile.FullName, quitAfter);
+            var arguments = string.Format("{0} \"{1}\" \":sout=#transcode{{{2}}}:std{{dst='{3}',access=file}}\"{4}", InterfaceStr ,InputFile.FullName, transcodeArgs, OutputFile.FullName, quitAfter);
             return arguments;
         }
 

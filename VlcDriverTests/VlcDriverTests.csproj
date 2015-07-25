@@ -57,10 +57,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="TestUtilities.cs" />
+    <Compile Include="VlcAudioConfigurationTests.cs" />
     <Compile Include="VlcDriverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VlcJobTests.cs" />
     <Compile Include="VlcLocatorTests.cs" />
+    <Compile Include="VlcVideoConfigurationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

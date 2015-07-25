@@ -75,12 +75,16 @@ namespace VlcDriverTests
         public void TestVlcJobGetsAddedToCollection()
         {
             var file = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
-            var job = new VlcAudioJob(new AudioConfiguration());
+            var audioConfiguration = new AudioConfiguration
+            {
+                Format = AudioConfiguration.ConversionFormats.Mp3
+            };
+
+            var job = new VlcAudioJob(audioConfiguration);
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
-            job.AudioConfiguration.Format = AudioConfiguration.ConversionFormats.Mp3;
 
             var starter = MockRepository.GenerateMock<IVlcStarter>();
             var instance = MockRepository.GenerateMock<IVlcInstance>();
@@ -99,12 +103,16 @@ namespace VlcDriverTests
         public void TestVlcWav2Mp3JobActuallyGetsDone()
         {
             var file = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
-            var job = new VlcAudioJob(new AudioConfiguration());
+            var audioConfiguration = new AudioConfiguration
+            {
+                Format = AudioConfiguration.ConversionFormats.Mp3
+            };
+
+            var job = new VlcAudioJob(audioConfiguration);
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
-            job.AudioConfiguration.Format = AudioConfiguration.ConversionFormats.Mp3;
 
             var driver = new VlcDriver(new VlcStarter());
             Assert.IsFalse(job.OutputFile.Exists);
@@ -124,12 +132,14 @@ namespace VlcDriverTests
         public void TestVlcMp32WavJobActuallyGetsDone()
         {
             var file = TestUtilities.GetTestFile("NeedinYou2SecWavMp3128.mp3");
-            var job = new VlcAudioJob(new AudioConfiguration());
+            var audioConfiguration = new AudioConfiguration();
+            audioConfiguration.Format = AudioConfiguration.ConversionFormats.Wav;
+
+            var job = new VlcAudioJob(audioConfiguration);
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output2.wav");
             job.OutputFile = new FileInfo(expectedOutputFile);
-            job.AudioConfiguration.Format = AudioConfiguration.ConversionFormats.Wav;
 
             var driver = new VlcDriver(new VlcStarter());
             Assert.IsFalse(job.OutputFile.Exists, "output file already exists, cannot run test");

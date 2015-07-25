@@ -2,6 +2,6 @@
 {
     interface IConfiguration
     {
-        string Arguments();
+        string GetPartArguments();
     }
 }

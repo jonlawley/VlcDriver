@@ -2,7 +2,12 @@
 
 namespace VLCDriver
 {
-    public class AudioConfiguration : IConfiguration
+    public interface IAudioConfiguration
+    {
+        string GetPartArguments();
+    }
+
+    public class AudioConfiguration : IConfiguration, IAudioConfiguration
     {
         public AudioConfiguration()
         {
@@ -22,7 +27,7 @@ namespace VLCDriver
 
         public int SampleRateHertz { get; set; }
 
-        public string Arguments()
+        public string GetPartArguments()
         {
             switch (Format)
             {
