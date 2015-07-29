@@ -7,7 +7,7 @@ namespace VLCDriver
 {
     public class VlcDriver
     {
-        public VlcDriver(IVlcStarter starter)
+        internal VlcDriver(IVlcStarter starter)
         {
             this.starter = starter;
         }
@@ -36,13 +36,18 @@ namespace VLCDriver
             return starter.Start(parameters, VlcExePath);
         }
 
-        public static VlcJob CreateVideoJob()
+        public static VlcDriver CreateVlcDriver()
+        {
+           return new VlcDriver(new VlcStarter());
+        }
+
+        public static VlcVideoJob CreateVideoJob()
         {
             return new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), new PortAllocator { StartPort = Properties.Settings.Default.StartPort },
                 new StatusParser(), new HttpVlcStatusSource());
         }
 
-        public static VlcJob CreateAudioJob()
+        public static VlcAudioJob CreateAudioJob()
         {
             return new VlcAudioJob(new AudioConfiguration(), new PortAllocator{StartPort = Properties.Settings.Default.StartPort}, new StatusParser(), new HttpVlcStatusSource());
         }

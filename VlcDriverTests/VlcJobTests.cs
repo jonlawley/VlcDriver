@@ -157,10 +157,12 @@ namespace VlcDriverTests
             var statusParser = MockRepository.GenerateMock<IStatusParser>();
             statusParser.Expect(x => x.Position).Return(67);
 
+            var testFile = TestUtilities.GetTestFile("NeedinYou2SecWavMp3128.mp3");
+
             var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource)
             {
                 State = VlcJob.JobState.Started,
-                InputFile = new FileInfo(@"C:\Foo.txt"),
+                InputFile = testFile,
                 OutputFile = new FileInfo(@"C:\Foo2.txt")
             };
 
@@ -197,6 +199,31 @@ namespace VlcDriverTests
             job.UpdateProgress();
             statusSource.AssertWasNotCalled(x => x.GetXml());
             statusParser.AssertWasNotCalled(x => x.Parse());
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void EnsureExceptionHappensWhenTryingToConvertIfInputFileIsMissing()
+        {
+            var audioConfig = MockRepository.GenerateMock<IAudioConfiguration>();
+
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(89);
+
+            var statusSource = MockRepository.GenerateStub<IVlcStatusSource>();
+            statusSource.Expect(x => x.GetXml()).Return("Foo");
+
+            var statusParser = MockRepository.GenerateMock<IStatusParser>();
+            statusParser.Expect(x => x.Position).Return(67);
+
+            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource)
+            {
+                State = VlcJob.JobState.Started,
+                InputFile = new FileInfo(@"C:\Foo.txt"),
+                OutputFile = new FileInfo(@"C:\Foo2.txt")
+            };
+
+            job.GetVlcArguments();
         }
     }
 }

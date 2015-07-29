@@ -33,6 +33,12 @@ namespace VLCDriver
                 throw new InvalidOperationException("No Input File Specified for job");
             if (OutputFile == null)
                 throw new InvalidOperationException("No Output File Specified for job");
+
+            if (!InputFile.Exists)
+            {
+                throw new FileNotFoundException("Input file didn't exist", InputFile.FullName);
+            }
+
             const string vlcQuitString = " vlc://quit";
 
             AllocatedPort = PortAllocator.NewPort();

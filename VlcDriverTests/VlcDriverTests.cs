@@ -223,5 +223,12 @@ namespace VlcDriverTests
             Assert.IsNotNull(job);
             Assert.AreEqual(288, job.PortAllocator.StartPort);
         }
+
+        [Test]
+        public void TestStaticVlcDriverCreation()
+        {
+            var job = VlcDriver.CreateVlcDriver();
+            Assert.IsNotNull(job);
+        }
     }
 }
