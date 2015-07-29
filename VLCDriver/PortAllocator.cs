@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace VLCDriver
 {
@@ -14,11 +15,14 @@ namespace VLCDriver
     /// </summary>
     public class PortAllocator : IPortAllocator
     {
-        private ConcurrentDictionary<int,int> UsedPorts
+        /// <summary>
+        /// Concurrency Dictionary Value indicates if it's still being Used
+        /// </summary>
+        private ConcurrentDictionary<int,bool> UsedPorts
         {
-            get { return usedPorts ?? (usedPorts = new ConcurrentDictionary<int, int>()); }
+            get { return usedPorts ?? (usedPorts = new ConcurrentDictionary<int, bool>()); }
         }
-        private ConcurrentDictionary<int,int> usedPorts;
+        private ConcurrentDictionary<int,bool> usedPorts;
 
         public int StartPort { get; set; }
 
@@ -27,9 +31,9 @@ namespace VLCDriver
             var port = StartPort;
             while (true)
             {
-                if (!UsedPorts.ContainsKey(port))
+                if (!UsedPorts.ContainsKey(port) || !UsedPorts[port])
                 {
-                    UsedPorts[port] = port;
+                    UsedPorts[port] = true;
                     return port;
                 }
                 port++;
@@ -38,8 +42,14 @@ namespace VLCDriver
 
         public void ReleasePort(int port)
         {
-            int outvalue;
-            UsedPorts.TryRemove(port,out outvalue);
+            if (UsedPorts.ContainsKey(port))
+            {
+                UsedPorts[port] = false;
+            }
+            else
+            {
+                throw new InvalidOperationException("Port is not in use");
+            }
         }
     }
 }
