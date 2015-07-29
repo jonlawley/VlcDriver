@@ -75,6 +75,10 @@ namespace VLCDriver
 
             var associatedJob = JobBag.First(x => x.Instance == instance);
             associatedJob.SetJobComplete();
+            if (OnJobStateChange != null)
+            {
+                OnJobStateChange(this, new JobStatusChangedEventArgs { Job = associatedJob });
+            }
         }
 
         public ConcurrentBag<VlcJob> JobBag
@@ -82,5 +86,8 @@ namespace VLCDriver
             get { return bag ?? (bag = new ConcurrentBag<VlcJob>()); }
         }
         private ConcurrentBag<VlcJob> bag;
+
+        public delegate void VlcDriverEventHandler(object source,JobStatusChangedEventArgs e);
+        public event VlcDriverEventHandler OnJobStateChange;
     }
 }

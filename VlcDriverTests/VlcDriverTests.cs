@@ -135,45 +135,40 @@ namespace VlcDriverTests
         }
 
         [Test]
-        [Ignore("Not written yet")]
-        public void TestLong()
+        public void TestWeGetJobStateChangedEventWhenConversionEnds()
         {
-            var file = new FileInfo(@"E:\Movies and TV\Movies\Airplane! 1980 1080p BluRay x264 AC3 - Ozlem\Airplane! 1980 1080p BluRay x264 AC3 - Ozlem.mp4");
+            var file = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
             var audioConfiguration = new AudioConfiguration
             {
-                Format = AudioConfiguration.ConversionFormats.Mpg
+                Format = AudioConfiguration.ConversionFormats.Mp3
             };
 
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcVideoJob(
-                                        new VideoConfiguration
-                                        {
-                                            Format = VideoConfiguration.VlcVideoFormat.h264
-                                        }, 
-                                        audioConfiguration, 
-                                        portAllocator, 
-                                        MockRepository.GenerateMock<IStatusParser>(),
-                                        MockRepository.GenerateMock<IVlcStatusSource>());
-
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
-            var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp4");
+            var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var driver = new VlcDriver(new VlcStarter());
-            Assert.IsFalse(job.OutputFile.Exists);
+            var starter = MockRepository.GenerateMock<IVlcStarter>();
+            var instance = MockRepository.GenerateMock<IVlcInstance>();
+            starter.Expect(x => x.Start(Arg<string>.Is.Anything, Arg<FileInfo>.Is.Anything)).Return(instance);
+            var driver = new VlcDriver(starter);
+            Assert.AreEqual(0, driver.JobBag.Count);
+            Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             driver.StartJob(job);
             Assert.AreEqual(1, driver.JobBag.Count);
-            Assert.IsNotNull(job.Instance);
-            Assert.IsNotNull(job.Instance.Process);
             Assert.AreEqual(VlcJob.JobState.Started, job.State);
-            job.Instance.Process.WaitForExit();
-            Assert.AreEqual(VlcJob.JobState.Finished, job.State);
-            var newFileInfo = new FileInfo(job.OutputFile.FullName);
-            Assert.IsTrue(newFileInfo.Exists);
-            Assert.That(newFileInfo.Length, Is.EqualTo(48901).Within(1).Percent);
+            var eventHandlerWasCalled = false;
+            driver.OnJobStateChange += (source, args) =>
+            {
+                eventHandlerWasCalled = true;
+                Assert.AreEqual(job, args.Job);
+            };
+            instance.Raise(x => x.OnExited += null, instance, new EventArgs());
+            Assert.IsTrue(eventHandlerWasCalled);
         }
 
         [Test]
