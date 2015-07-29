@@ -5,6 +5,11 @@ namespace VLCDriver
     public interface IVideoConfiguration
     {
         string GetPartArguments();
+        VideoConfiguration.VlcVideoFormat Format { get; set; }
+        VideoConfiguration.VideoScale Scale { get; set; }
+        int Mpg2Vb { get; set; }
+        int? XScale { get; set; }
+        int? YScale { get; set; }
     }
 
     public class VideoConfiguration : IConfiguration, IVideoConfiguration

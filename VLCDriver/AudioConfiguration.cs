@@ -5,6 +5,10 @@ namespace VLCDriver
     public interface IAudioConfiguration
     {
         string GetPartArguments();
+        AudioConfiguration.ConversionFormats Format { get; set; }
+        int AudioBitrateInkbps { get; set; }
+        int Channels { get; set; }
+        int SampleRateHertz { get; set; }
     }
 
     public class AudioConfiguration : IConfiguration, IAudioConfiguration

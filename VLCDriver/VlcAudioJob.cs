@@ -4,7 +4,7 @@ namespace VLCDriver
 {
     public class VlcAudioJob : VlcJob
     {
-        public VlcAudioJob(IAudioConfiguration audioConfig, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce)
+        internal VlcAudioJob(IAudioConfiguration audioConfig, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce)
             : base(allocator, statusParser, statusSouce)
         {
             if(audioConfig == null)

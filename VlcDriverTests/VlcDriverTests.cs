@@ -207,5 +207,21 @@ namespace VlcDriverTests
             Assert.IsTrue(newFileInfo.Exists);
             Assert.That(newFileInfo.Length, Is.EqualTo(368684).Within(1).Percent);
         }
+
+        [Test]
+        public void TestStaticAudioJobCreation()
+        {
+            var job = VlcDriver.CreateAudioJob();
+            Assert.IsNotNull(job);
+            Assert.AreEqual(288, job.PortAllocator.StartPort);
+        }
+
+        [Test]
+        public void TestStaticVidioJobCreation()
+        {
+            var job = VlcDriver.CreateVideoJob();
+            Assert.IsNotNull(job);
+            Assert.AreEqual(288, job.PortAllocator.StartPort);
+        }
     }
 }

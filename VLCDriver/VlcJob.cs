@@ -19,8 +19,8 @@ namespace VLCDriver
         public FileInfo OutputFile { get; set; }
         public bool QuitAfer { get; set; }
 
-        public IAudioConfiguration AudioConfiguration { get; protected set; }
-        private IPortAllocator PortAllocator { get; set; }
+        public IAudioConfiguration AudioConfiguration { get; set; }
+        public IPortAllocator PortAllocator { get; private set; }
         private IStatusParser StatusParser { get; set; }
         private IVlcStatusSource StatusSource { get; set; }
         private int AllocatedPort { get; set; }

@@ -36,6 +36,17 @@ namespace VLCDriver
             return starter.Start(parameters, VlcExePath);
         }
 
+        public static VlcJob CreateVideoJob()
+        {
+            return new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), new PortAllocator { StartPort = Properties.Settings.Default.StartPort },
+                new StatusParser(), new HttpVlcStatusSource());
+        }
+
+        public static VlcJob CreateAudioJob()
+        {
+            return new VlcAudioJob(new AudioConfiguration(), new PortAllocator{StartPort = Properties.Settings.Default.StartPort}, new StatusParser(), new HttpVlcStatusSource());
+        }
+
         public void StartJob(VlcJob job)
         {
             job.QuitAfer = true; //fairly important if we're tracking it

@@ -2,14 +2,14 @@
 {
     public class VlcVideoJob : VlcJob
     {
-        public VlcVideoJob(IVideoConfiguration videoConfiguration, IAudioConfiguration audioConfiguration, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce)
+        internal VlcVideoJob(IVideoConfiguration videoConfiguration, IAudioConfiguration audioConfiguration, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce)
             : base(allocator, statusParser, statusSouce)
         {
             VideoConfiguration = videoConfiguration;
             AudioConfiguration = audioConfiguration;
         }
 
-        public IVideoConfiguration VideoConfiguration { get; protected set; }
+        public IVideoConfiguration VideoConfiguration { get; set; }
 
         protected override string GetSpecificJobTypeArguments()
         {
