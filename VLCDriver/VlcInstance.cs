@@ -7,6 +7,7 @@ namespace VLCDriver
     {
         event VlcInstance.VlcEventHandler OnExited;
         Process Process { get; }
+        void Kill();
     }
 
     public class VlcInstance : IVlcInstance
@@ -53,5 +54,13 @@ namespace VLCDriver
             }
         }
         public Process Process { get; private set; }
+
+        public void Kill()
+        {
+            if (Process != null)
+            {
+                Process.Kill();
+            }
+        }
     }
 }
