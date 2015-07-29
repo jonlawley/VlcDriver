@@ -80,7 +80,10 @@ namespace VlcDriverTests
                 Format = AudioConfiguration.ConversionFormats.Mp3
             };
 
-            var job = new VlcAudioJob(audioConfiguration);
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(42);
+
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -108,7 +111,10 @@ namespace VlcDriverTests
                 Format = AudioConfiguration.ConversionFormats.Mp3
             };
 
-            var job = new VlcAudioJob(audioConfiguration);
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(42);
+
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -129,13 +135,60 @@ namespace VlcDriverTests
         }
 
         [Test]
+        [Ignore("Not written yet")]
+        public void TestLong()
+        {
+            var file = new FileInfo(@"E:\Movies and TV\Movies\Airplane! 1980 1080p BluRay x264 AC3 - Ozlem\Airplane! 1980 1080p BluRay x264 AC3 - Ozlem.mp4");
+            var audioConfiguration = new AudioConfiguration
+            {
+                Format = AudioConfiguration.ConversionFormats.Mpg
+            };
+
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(42);
+
+            var job = new VlcVideoJob(
+                                        new VideoConfiguration
+                                        {
+                                            Format = VideoConfiguration.VlcVideoFormat.h264
+                                        }, 
+                                        audioConfiguration, 
+                                        portAllocator, 
+                                        MockRepository.GenerateMock<IStatusParser>(),
+                                        MockRepository.GenerateMock<IVlcStatusSource>());
+
+            Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
+            job.InputFile = file;
+            var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp4");
+            job.OutputFile = new FileInfo(expectedOutputFile);
+
+            var driver = new VlcDriver(new VlcStarter());
+            Assert.IsFalse(job.OutputFile.Exists);
+            driver.StartJob(job);
+            Assert.AreEqual(1, driver.JobBag.Count);
+            Assert.IsNotNull(job.Instance);
+            Assert.IsNotNull(job.Instance.Process);
+            Assert.AreEqual(VlcJob.JobState.Started, job.State);
+            job.Instance.Process.WaitForExit();
+            Assert.AreEqual(VlcJob.JobState.Finished, job.State);
+            var newFileInfo = new FileInfo(job.OutputFile.FullName);
+            Assert.IsTrue(newFileInfo.Exists);
+            Assert.That(newFileInfo.Length, Is.EqualTo(48901).Within(1).Percent);
+        }
+
+        [Test]
         public void TestVlcMp32WavJobActuallyGetsDone()
         {
             var file = TestUtilities.GetTestFile("NeedinYou2SecWavMp3128.mp3");
-            var audioConfiguration = new AudioConfiguration();
-            audioConfiguration.Format = AudioConfiguration.ConversionFormats.Wav;
+            var audioConfiguration = new AudioConfiguration
+            {
+                Format = AudioConfiguration.ConversionFormats.Wav
+            };
 
-            var job = new VlcAudioJob(audioConfiguration);
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(42);
+
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output2.wav");

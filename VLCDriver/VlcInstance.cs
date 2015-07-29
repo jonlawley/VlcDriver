@@ -6,7 +6,7 @@ namespace VLCDriver
     public interface IVlcInstance
     {
         event VlcInstance.VlcEventHandler OnExited;
-        Process Process { get; set; }
+        Process Process { get; }
     }
 
     public class VlcInstance : IVlcInstance
@@ -17,28 +17,41 @@ namespace VLCDriver
         public VlcInstance(Process process)
         {
             Process = process;
-            Process.Exited += Process_Exited;
-            Process.OutputDataReceived += Process_OutputDataReceived;
-            Process.ErrorDataReceived += Process_ErrorDataReceived;
+            SubscribeToEvents();
         }
 
-        void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void SubscribeToEvents()
         {
+            Process.Exited += Process_Exited;
+            Process.OutputDataReceived += OnOutputDataReceived;
+            Process.ErrorDataReceived += OnErrorDataReceived;
         }
 
-        void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        private void UnsubscribeToEvents()
+        {
+            Process.Exited -= Process_Exited;
+            Process.OutputDataReceived -= OnOutputDataReceived;
+            Process.ErrorDataReceived -= OnErrorDataReceived;
+        }
+
+        private void OnErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
         private void Process_Exited(object sender, EventArgs e)
         {
-            Process.Exited -= Process_Exited;
+            UnsubscribeToEvents();
             if (OnExited != null)
             {
-                OnExited(this, new EventArgs());
+                OnExited(this, EventArgs.Empty);
             }
         }
-        public Process Process { get; set; }
+        public Process Process { get; private set; }
     }
 }

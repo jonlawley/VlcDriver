@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<root>
+
+<fullscreen>0</fullscreen>
+<audiodelay>0</audiodelay>
+<apiversion>3</apiversion>
+<currentplid>5</currentplid>
+<time>86</time>
+<volume>256</volume>
+<length>5262</length>
+<random>false</random>
+<audiofilters>
+  <filter_0></filter_0></audiofilters>
+<rate>1</rate>
+<videoeffects>
+  <hue>0</hue>
+  <saturation>1</saturation>
+  <contrast>1</contrast>
+  <brightness>1</brightness>
+  <gamma>1</gamma></videoeffects>
+<state>playing</state>
+<loop>false</loop>
+<version>2.2.1 Terry Pratchett (Weatherwax)</version>
+<position>0.01635168120265</position>
+<repeat>false</repeat>
+<subtitledelay>0</subtitledelay>
+<equalizer></equalizer><information>
+    <category name="meta">
+    <info name='filename'>Airplane! 1980 1080p BluRay x264 AC3 - Ozlem.mp4</info>    </category>
+  <category name='Stream 0'><info name='Display resolution'>1920x1080</info><info name='Type'>Video</info><info name='Frame rate'>23.976023</info><info name='Codec'>H264 - MPEG-4 AVC (part 10) (avc1)</info><info name='Resolution'>1920x1080</info></category><category name='Stream 1'><info name='Bitrate'>96 kb/s</info><info name='Type'>Audio</info><info name='Sample rate'>48000 Hz</info><info name='Language'>English</info><info name='Codec'>A52 Audio (aka AC3) (ac-3)</info></category>  </information>
+  <stats>
+  <lostabuffers>0</lostabuffers>
+<readpackets>2212</readpackets>
+<lostpictures>0</lostpictures>
+<demuxreadbytes>19563030</demuxreadbytes>
+<demuxbitrate>0.10616428405046</demuxbitrate>
+<playedabuffers>0</playedabuffers>
+<demuxcorrupted>0</demuxcorrupted>
+<sendbitrate>0</sendbitrate>
+<sentbytes>0</sentbytes>
+<displayedpictures>0</displayedpictures>
+<demuxreadpackets>0</demuxreadpackets>
+<sentpackets>0</sentpackets>
+<inputbitrate>0.12464106827974</inputbitrate>
+<demuxdiscontinuity>0</demuxdiscontinuity>
+<averagedemuxbitrate>0</averagedemuxbitrate>
+<decodedvideo>0</decodedvideo>
+<averageinputbitrate>0</averageinputbitrate>
+<readbytes>21660319</readbytes>
+<decodedaudio>0</decodedaudio>
+  </stats>
+</root>

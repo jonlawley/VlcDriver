@@ -57,8 +57,8 @@ namespace VLCDriver
             }
             instance.OnExited -= OnVlcInstanceExited;
 
-            var associatedJob = JobBag.First(x => x.Instance == instance); //smell
-            associatedJob.State = VlcJob.JobState.Finished; //TODO But not if error
+            var associatedJob = JobBag.First(x => x.Instance == instance);
+            associatedJob.SetJobComplete();
         }
 
         public ConcurrentBag<VlcJob> JobBag
