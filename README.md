@@ -24,11 +24,11 @@ I wanted to create a library which I can use it these various projects and thoug
 
 ## Installation
 
-Solution was written in and compiles and build in Visual Studio 2013
+Solution was written in and compiles and builds in Visual Studio 2013 and has been tested in Visual Studio 2015 RC
 
 ## Tests
 
-The VLC driver has a full set of unit tests. Tests run in Visual Studio Test Runner.
+The VLC driver has a comprehensive set of unit tests. Tests have been written using NUnit. To run them, install the "NUnit Test Adapter" extension in Visual Studio.
 
 ## Contributors
 
