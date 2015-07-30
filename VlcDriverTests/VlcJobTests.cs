@@ -24,7 +24,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             var inputfile = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
             job.InputFile = inputfile;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -47,7 +47,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcVideoJob(videoConfig, audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcVideoJob(videoConfig, audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             var inputfile = TestUtilities.GetTestFile("SampleVideo_720x480_1mbH264.mp4");
             job.InputFile = inputfile;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp4");
@@ -67,7 +67,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>())
+            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce())
             {
                 QuitAfer = true
             };
@@ -98,7 +98,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>())
+            var job = new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce())
             {
                 OutputFile = new FileInfo("out.txt")
             };
@@ -112,7 +112,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>())
+            var job = new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce())
             {
                 InputFile = new FileInfo("in.txt")
             };
@@ -129,7 +129,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(49);
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             var inputfile = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
             job.InputFile = inputfile;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -157,17 +157,22 @@ namespace VlcDriverTests
             var statusParser = MockRepository.GenerateMock<IStatusParser>();
             statusParser.Expect(x => x.Position).Return(67);
 
+            var timeSource = MockRepository.GenerateMock<ITimeSouce>();
+            timeSource.Expect(x => x.getDateTime).Return(new DateTime(1988, 03, 26, 18, 0, 0));
+
             var testFile = TestUtilities.GetTestFile("NeedinYou2SecWavMp3128.mp3");
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource)
+            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource, timeSource)
             {
                 State = VlcJob.JobState.Started,
                 InputFile = testFile,
-                OutputFile = new FileInfo(@"C:\Foo2.txt")
+                OutputFile = new FileInfo(@"C:\Foo2.txt"),
+                Instance = MockRepository.GenerateMock<IVlcInstance>()
             };
 
             job.GetVlcArguments();
             job.UpdateProgress();
+
             Assert.AreEqual("http://localhost:89/requests/status.xml", statusSource.Url, "Correct Url was not generated");
             Assert.AreEqual(67, job.PercentComplete);
             statusSource.AssertWasCalled(x =>x.GetXml());
@@ -191,7 +196,7 @@ namespace VlcDriverTests
             var statusParser = MockRepository.GenerateMock<IStatusParser>();
             statusParser.Expect(x => x.Position).Return(67);
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource)
+            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource, new TimeSouce())
             {
                 State = state,
             };
@@ -216,7 +221,7 @@ namespace VlcDriverTests
             var statusParser = MockRepository.GenerateMock<IStatusParser>();
             statusParser.Expect(x => x.Position).Return(67);
 
-            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource)
+            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource, new TimeSouce())
             {
                 State = VlcJob.JobState.Started,
                 InputFile = new FileInfo(@"C:\Foo.txt"),
@@ -225,5 +230,62 @@ namespace VlcDriverTests
 
             job.GetVlcArguments();
         }
+
+        [Test]
+        public void EnsureExpectedCompletionTimeIsEstimatedCorectly()
+        {
+            var audioConfig = MockRepository.GenerateMock<IAudioConfiguration>();
+
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+
+            var statusSource = MockRepository.GenerateMock<IVlcStatusSource>();
+
+            var statusParser = MockRepository.GenerateMock<IStatusParser>();
+            statusParser.Expect(x => x.Position).Return(0).Repeat.Once();
+
+            var timeSouce = MockRepository.GenerateMock<ITimeSouce>();
+            var testTime = new DateTime(1988, 3, 26, 18, 0, 0).ToUniversalTime();
+            timeSouce.Expect(x => x.getDateTime).Return(testTime.AddSeconds(1)).Repeat.Once();
+
+            var instance = MockRepository.GenerateMock<IVlcInstance>();
+            instance.Expect(x => x.StartTime).Return(testTime);
+
+            var testFile = TestUtilities.GetTestFile("NeedinYou2SecWavMp3128.mp3");
+
+            var job = new VlcAudioJob(audioConfig, portAllocator, statusParser, statusSource, timeSouce)
+            {
+                State = VlcJob.JobState.Started,
+                InputFile = testFile,
+                OutputFile = new FileInfo(@"C:\Foo2.txt"),
+                Instance = instance
+            };
+
+            job.GetVlcArguments();
+            //To begin with ensure the estimated completion time is 0
+            Assert.AreEqual(new TimeSpan(0,0,0), job.EstimatedTimeToCompletion);
+
+            //Ensure the updating the progress calculates 0 as no progress has been made
+            job.UpdateProgress();
+            Assert.AreEqual(new TimeSpan(0, 0, 0), job.EstimatedTimeToCompletion);
+
+            // If 30 seconds have elapsed and the job is 25% complete, the estimated finish time should be 1m 30s
+            statusParser.Expect(x => x.Position).Return(0.25).Repeat.Once();
+            timeSouce.Expect(x => x.getDateTime).Return(testTime.AddSeconds(30)).Repeat.Once();
+            job.UpdateProgress();
+            Assert.AreEqual(new TimeSpan(0, 1, 30), job.EstimatedTimeToCompletion);
+
+            //If 1 minute has elapsed and the job is 50% complete, the estimated time should be 1 minute
+            statusParser.Expect(x => x.Position).Return(0.5).Repeat.Once();
+            timeSouce.Expect(x => x.getDateTime).Return(testTime.AddSeconds(60)).Repeat.Once();
+            job.UpdateProgress();
+            Assert.AreEqual(new TimeSpan(0, 1, 0), job.EstimatedTimeToCompletion);
+
+            //If 2 minutes have elapsed and the job is 100% complete, the estimated time left is 0
+            statusParser.Expect(x => x.Position).Return(1).Repeat.Once();
+            timeSouce.Expect(x => x.getDateTime).Return(testTime.AddSeconds(120)).Repeat.Once();
+            job.UpdateProgress();
+            Assert.AreEqual(new TimeSpan(0, 0, 0), job.EstimatedTimeToCompletion);
+        }
+
     }
 }

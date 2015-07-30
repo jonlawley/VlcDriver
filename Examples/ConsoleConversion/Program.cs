@@ -19,6 +19,11 @@ namespace ConsoleConversion
             var input = new FileInfo(@"c:\Temp\inputVideo.avi");
             var output = new FileInfo(@"c:\Temp\outputVideo.mpg");
 
+            if (!input.Exists)
+            {
+                throw new FileNotFoundException("Example app needs a file to convert", input.FullName);
+            }
+
             Job = VlcDriver.CreateVideoJob();
             Job.InputFile = input;
             Job.OutputFile = output;
@@ -34,8 +39,8 @@ namespace ConsoleConversion
                 Console.Clear();
                 Console.SetCursorPosition(0,0);
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("{0}% Complete", Job.PercentComplete);
-                Thread.Sleep(2000);
+                Console.WriteLine("{0}% Complete. Remaining {1}", string.Format("{0:0.0#}", Job.PercentComplete * 100), Job.EstimatedTimeToCompletion.ToString(@"h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture));
+                Thread.Sleep(1000);
             }
         }
 

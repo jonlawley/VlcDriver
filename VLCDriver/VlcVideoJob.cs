@@ -2,8 +2,8 @@
 {
     public class VlcVideoJob : VlcJob
     {
-        internal VlcVideoJob(IVideoConfiguration videoConfiguration, IAudioConfiguration audioConfiguration, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce)
-            : base(allocator, statusParser, statusSouce)
+        internal VlcVideoJob(IVideoConfiguration videoConfiguration, IAudioConfiguration audioConfiguration, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce, ITimeSouce timeSouce)
+            : base(allocator, statusParser, statusSouce, timeSouce)
         {
             VideoConfiguration = videoConfiguration;
             AudioConfiguration = audioConfiguration;

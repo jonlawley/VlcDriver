@@ -83,7 +83,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -114,7 +114,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -146,7 +146,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
@@ -183,7 +183,7 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output2.wav");

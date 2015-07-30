@@ -7,6 +7,7 @@ namespace VLCDriver
     {
         event VlcInstance.VlcEventHandler OnExited;
         Process Process { get; }
+        DateTime StartTime { get; }
         void Kill();
     }
 
@@ -61,6 +62,11 @@ namespace VLCDriver
             {
                 Process.Kill();
             }
+        }
+
+        public DateTime StartTime 
+        {
+            get { return Process.StartTime; }
         }
     }
 }
