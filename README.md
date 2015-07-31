@@ -1,11 +1,11 @@
 # VlcDriver
 Create and manage VLC media conversion using .Net
 
-VlC Driver provides a simple way to call into the media conversion from a simple .Net Library.
+VlC Driver provides a simple way to call into the media conversion from a simple .Net Library. This library uses is based around the strategy of calling VLC as a process rather than using PInvoke to call into lvc libraries (like libVLCnet http://libvlcnet.sourceforge.net/)
 
 ## Code Example
 
-Here's a simple conversion of a video file to mg2:
+Here's a simple conversion of a video file to mpg2:
 
             var job = VlcDriver.CreateVideoJob();
             job.InputFile = input; // A FileInfo Object
@@ -24,7 +24,7 @@ I wanted to create a library which I can use it these various projects and thoug
 
 ## Installation
 
-Solution was written in and compiles and builds in Visual Studio 2013 and has been tested in Visual Studio 2015 RC
+Solution was written in and compiles and builds in Visual Studio 2013 .Net 4.5 and has been tested in Visual Studio 2015 RC. Nuget will handle installation of libraries.
 
 ## Tests
 

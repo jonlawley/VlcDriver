@@ -24,13 +24,13 @@ namespace ConsoleConversion
                 throw new FileNotFoundException("Example app needs a file to convert", input.FullName);
             }
 
-            Job = VlcDriver.CreateVideoJob();
+            var driver = new VlcDriver();
+            Job = driver.CreateVideoJob();
             Job.InputFile = input;
             Job.OutputFile = output;
             Job.VideoConfiguration.Format = VideoConfiguration.VlcVideoFormat.Mpeg2;
             Job.AudioConfiguration.Format = AudioConfiguration.ConversionFormats.Mpg;
 
-            var driver = VlcDriver.CreateVlcDriver();
             driver.StartJob(Job);
 
             while (Job.State != VlcJob.JobState.Finished)

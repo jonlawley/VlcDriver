@@ -204,17 +204,19 @@ namespace VlcDriverTests
         }
 
         [Test]
-        public void TestStaticAudioJobCreation()
+        public void TestAudioJobCreation()
         {
-            var job = VlcDriver.CreateAudioJob();
+            var driver = new VlcDriver();
+            var job = driver.CreateAudioJob();
             Assert.IsNotNull(job);
             Assert.AreEqual(288, job.PortAllocator.StartPort);
         }
 
         [Test]
-        public void TestStaticVidioJobCreation()
+        public void TestVidioJobCreation()
         {
-            var job = VlcDriver.CreateVideoJob();
+            var driver = new VlcDriver();
+            var job = driver.CreateVideoJob();
             Assert.IsNotNull(job);
             Assert.AreEqual(288, job.PortAllocator.StartPort);
         }
@@ -222,8 +224,27 @@ namespace VlcDriverTests
         [Test]
         public void TestStaticVlcDriverCreation()
         {
-            var job = VlcDriver.CreateVlcDriver();
+            var job = new VlcDriver();
             Assert.IsNotNull(job);
+        }
+
+        [Test]
+        public void EnsureTheSameInstanceOfPortAllocatorIsAlwaysUsedWhenOnceIsNotSpecifiedInTheConstructor()
+        {
+            var driver = new VlcDriver();
+            var job1 = driver.CreateAudioJob();
+            var job2 = driver.CreateAudioJob();
+            Assert.AreNotEqual(job1,job2);
+            Assert.AreEqual(job1.PortAllocator, job2.PortAllocator);
+        }
+
+        [Test]
+        public void EnsureTheSameInstanceOfPortAllocatorIsAlwaysUsedWhenOnceIsSpecifiedInTheConstructor()
+        {
+            var portAllocator = new PortAllocator();
+            var driver = new VlcDriver(null, portAllocator);
+            var job = driver.CreateAudioJob();
+            Assert.AreEqual(portAllocator, job.PortAllocator);
         }
     }
 }

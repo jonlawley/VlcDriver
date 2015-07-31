@@ -2,17 +2,34 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 
 namespace VLCDriver
 {
     public class VlcDriver
     {
-        internal VlcDriver(IVlcStarter starter)
+        public VlcDriver(IVlcStarter starter = null, IPortAllocator allocator = null)
         {
-            this.starter = starter;
+            Starter = starter ?? new VlcStarter();
+
+            var portAllocator = allocator ?? new PortAllocator{ StartPort = Properties.Settings.Default.StartPort };
+
+            container = new WindsorContainer();
+            container.Register(Component.For<VlcAudioJob>().LifestyleTransient());
+            container.Register(Component.For<VlcVideoJob>().LifestyleTransient());
+            container.Register(Component.For<IAudioConfiguration>().ImplementedBy<AudioConfiguration>().LifestyleTransient());
+            container.Register(Component.For<IVideoConfiguration>().ImplementedBy<VideoConfiguration>().LifestyleTransient());
+
+            container.Register(Component.For<IPortAllocator>().Instance(portAllocator));
+
+            container.Register(Component.For<IStatusParser>().ImplementedBy<StatusParser>().LifestyleTransient());
+            container.Register(Component.For<IVlcStatusSource>().ImplementedBy<HttpVlcStatusSource>().LifestyleTransient());
+            container.Register(Component.For<ITimeSouce>().ImplementedBy<TimeSouce>().LifestyleTransient());
         }
 
-        private readonly IVlcStarter starter;
+        private IVlcStarter Starter { get; set; }
+        private readonly WindsorContainer container;
 
         public VlcLocator Locator
         {
@@ -33,23 +50,17 @@ namespace VLCDriver
 
         public IVlcInstance StartInstance(string parameters = "")
         {
-            return starter.Start(parameters, VlcExePath);
+            return Starter.Start(parameters, VlcExePath);
         }
 
-        public static VlcDriver CreateVlcDriver()
+        public VlcVideoJob CreateVideoJob()
         {
-           return new VlcDriver(new VlcStarter());
+            return container.Resolve<VlcVideoJob>();
         }
 
-        public static VlcVideoJob CreateVideoJob()
+        public VlcAudioJob CreateAudioJob()
         {
-            return new VlcVideoJob(new VideoConfiguration(), new AudioConfiguration(), new PortAllocator { StartPort = Properties.Settings.Default.StartPort },
-                new StatusParser(), new HttpVlcStatusSource(), new TimeSouce());
-        }
-
-        public static VlcAudioJob CreateAudioJob()
-        {
-            return new VlcAudioJob(new AudioConfiguration(), new PortAllocator{StartPort = Properties.Settings.Default.StartPort}, new StatusParser(), new HttpVlcStatusSource(), new TimeSouce());
+            return container.Resolve<VlcAudioJob>();
         }
 
         public void StartJob(VlcJob job)
@@ -58,7 +69,7 @@ namespace VLCDriver
             var vlcArguments = job.GetVlcArguments();
 
             job.State = VlcJob.JobState.Started;
-            var instance = starter.Start(vlcArguments, VlcExePath);
+            var instance = Starter.Start(vlcArguments, VlcExePath);
             job.Instance = instance;
             instance.OnExited += OnVlcInstanceExited;
             JobBag.Add(job);
