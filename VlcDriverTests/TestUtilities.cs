@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using VLCDriver;
 
 namespace VlcDriverTests
 {
@@ -70,6 +71,21 @@ namespace VlcDriverTests
             }
 
             return numberClosed;
+        }
+
+        public static void SetVlcExeLocationOnNonStandardWindowsEnvironments(VlcDriver driver)
+        {
+            var osver = Environment.OSVersion;
+            switch (osver.Platform)
+            {
+                case PlatformID.Win32NT:
+                    break;
+                case PlatformID.Unix:
+                    driver.VlcExePath = new FileInfo("/usr/bin/vlc");
+                    break;
+                default:
+                    throw new InvalidOperationException("I've not thought this through yet");
+            }
         }
     }
 }

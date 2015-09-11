@@ -3,6 +3,7 @@ using VLCDriver;
 
 namespace VlcDriverTests
 {
+    [TestFixture]
     public class PortAllocatorTests
     {
         [Test]

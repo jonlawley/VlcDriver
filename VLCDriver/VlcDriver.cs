@@ -9,9 +9,11 @@ namespace VLCDriver
 {
     public class VlcDriver
     {
-        public VlcDriver(IVlcStarter starter = null, IPortAllocator allocator = null)
+        public VlcDriver(IVlcStarter starter = null, IPortAllocator allocator = null, IVlcLocator locator = null)
         {
             Starter = starter ?? new VlcStarter();
+
+            Locator = locator ?? new VlcLocator();
 
             var portAllocator = allocator ?? new PortAllocator{ StartPort = Properties.Settings.Default.StartPort };
 
@@ -31,16 +33,22 @@ namespace VLCDriver
         private IVlcStarter Starter { get; set; }
         private readonly WindsorContainer container;
 
-        public VlcLocator Locator
-        {
-            get { return locator ?? (locator = new VlcLocator()); }
-            protected set { locator = value; }
-        }
-        private VlcLocator locator;
+        public IVlcLocator Locator { get; protected set; }
 
         public FileInfo VlcExePath
         {
-            get { return vlcExePath ?? (vlcExePath = new FileInfo(Locator.Location)); }
+            get
+            {
+                if (vlcExePath != null)
+                {
+                    return vlcExePath;
+                }
+                if (Locator == null || Locator.Location == null)
+                {
+                    throw new InvalidOperationException("VLC Cannot be automatically located on this system. Please set the 'VlcExePath' field to the path of the VLC executable");
+                }
+                return vlcExePath = new FileInfo(Locator.Location);
+            }
             set
             {
                 vlcExePath = value;

@@ -30,7 +30,7 @@ namespace VlcDriverTests
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}\\NeedinYou2SecWav.wav\" \":sout=#transcode{{vcodec=none,!!FOO!!}}:std{{dst='{1}\\output.mp3',access=file}}\"", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir());
+            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}{2}NeedinYou2SecWav.wav\" \":sout=#transcode{{vcodec=none,!!FOO!!}}:std{{dst='{1}{2}output.mp3',access=file}}\"", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir(), Path.DirectorySeparatorChar);
             var actualArguments = job.GetVlcArguments();
             Assert.AreEqual(expectedArguments, actualArguments);
         }
@@ -53,7 +53,7 @@ namespace VlcDriverTests
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp4");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}\\SampleVideo_720x480_1mbH264.mp4\" \":sout=#transcode{{!!VFOO!!,!!AFOO!!}}:std{{dst='{1}\\output.mp4',access=file}}\"", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir());
+            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}{2}SampleVideo_720x480_1mbH264.mp4\" \":sout=#transcode{{!!VFOO!!,!!AFOO!!}}:std{{dst='{1}{2}output.mp4',access=file}}\"", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir(), Path.DirectorySeparatorChar);
             var actualArguments = job.GetVlcArguments();
             Assert.AreEqual(expectedArguments, actualArguments);
         }
@@ -76,23 +76,13 @@ namespace VlcDriverTests
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}\\NeedinYou2SecWav.wav\" \":sout=#transcode{{vcodec=none,!!FOO!!}}:std{{dst='{1}\\output.mp3',access=file}}\" vlc://quit", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir());
+            var expectedArguments = string.Format("-I http --http-password goose --http-port 42 \"{0}{2}NeedinYou2SecWav.wav\" \":sout=#transcode{{vcodec=none,!!FOO!!}}:std{{dst='{1}{2}output.mp3',access=file}}\" vlc://quit", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir(), Path.DirectorySeparatorChar);
             var actualArguments = job.GetVlcArguments();
             Assert.AreEqual(expectedArguments, actualArguments);
         }
 
-        //[Test]
-        //public void EnsureAudioJobIsNullWhenNoInputFileInGiven()
-        //{
-        //    var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
-        //    portAllocator.Expect(x => x.NewPort()).Return(42);
-
-        //    var job = new VlcAudioJob(new AudioConfiguration(), portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>());
-        //    Assert.IsNull(job.GetVlcArguments());
-        //}
-
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "No Input File Specified for job")]
         public void EnsureExceptionWhenNoInputFileInGiven()
         {
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();

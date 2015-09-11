@@ -1,11 +1,6 @@
-﻿using NUnit.Framework;
-using Rhino.Mocks;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using NUnit.Framework;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VLCDriver;
 
 namespace VlcDriverTests
@@ -14,11 +9,21 @@ namespace VlcDriverTests
     public class VlcLocatorTests
     {
         [Test]
-        public void TestCorrectLocationComesBackOnNormalSystem()
+        public void TestCorrectLocationComesBackOnNormalWindowsSystem()
         {
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                //We cannot run this test
+                return;
+            }
+
             var vlcLocation = new VlcLocator();
             var actualLocation = vlcLocation.Location;
+
             Assert.IsTrue(File.Exists(actualLocation));
+            var info = new FileInfo(actualLocation);
+            Assert.True(info.Exists);
+            Assert.AreEqual("vlc", Path.GetFileNameWithoutExtension(info.Name));
         }
     }
 }

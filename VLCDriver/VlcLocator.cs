@@ -3,7 +3,7 @@ using System.IO;
 
 namespace VLCDriver
 {
-    public class VlcLocator
+    public class VlcLocator : IVlcLocator
     {
         private string DefaultVlcPathBasedOnProcessor()
         {
@@ -22,6 +22,7 @@ namespace VLCDriver
         public string Location
         {
             get { return location ?? (location = DefaultVlcPathBasedOnProcessor()); }
+            set { location = value; }
         }
         private string location;
 
