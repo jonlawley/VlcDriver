@@ -97,7 +97,7 @@ namespace VlcDriverTests
             var driver = new VlcDriver();
             var job = driver.CreateAudioJob();
             Assert.IsNotNull(job);
-            Assert.AreEqual(288, job.PortAllocator.StartPort);
+            Assert.AreEqual(8081, job.PortAllocator.StartPort);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace VlcDriverTests
             var driver = new VlcDriver();
             var job = driver.CreateVideoJob();
             Assert.IsNotNull(job);
-            Assert.AreEqual(288, job.PortAllocator.StartPort);
+            Assert.AreEqual(8081, job.PortAllocator.StartPort);
         }
 
         [Test]

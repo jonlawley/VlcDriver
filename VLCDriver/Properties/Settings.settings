@@ -6,7 +6,7 @@
       <Value Profile="(Default)">goose</Value>
     </Setting>
     <Setting Name="StartPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">288</Value>
+      <Value Profile="(Default)">8081</Value>
     </Setting>
   </Settings>
 </SettingsFile>

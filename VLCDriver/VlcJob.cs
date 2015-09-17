@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 
 namespace VLCDriver
 {
@@ -70,7 +71,17 @@ namespace VLCDriver
 
             var statusUrl = string.Format("http://localhost:{0}/requests/status.xml", AllocatedPort);
             StatusSource.Url = statusUrl;
-            var xml = StatusSource.GetXml();
+
+            string xml= string.Empty;
+            try
+            {
+                xml = StatusSource.GetXml();
+            }
+            catch (WebException)
+            {
+                Console.WriteLine("Could not connect to vlc http service to get position");
+                return;
+            }
 
             StatusParser.Xml = xml;
             StatusParser.Parse();

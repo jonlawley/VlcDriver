@@ -13,7 +13,14 @@ namespace ConsoleConversion
         {
             #region This region is only for use in this console example as ending the console will leave VLC running
             handler = ConsoleEventCallback;
-            SetConsoleCtrlHandler(handler, true);
+            var osver = Environment.OSVersion;
+            switch (osver.Platform)
+            {
+                case PlatformID.Win32NT:
+                    SetConsoleCtrlHandler(handler, true);
+                    break;
+            }
+            
             #endregion
 
             var input = new FileInfo(@"c:\Temp\inputVideo.avi");
@@ -25,6 +32,7 @@ namespace ConsoleConversion
             }
 
             var driver = new VlcDriver();
+            //driver.VlcExePath = new FileInfo("/usr/bin/vlc"); - Only on Non Windows environments
             Job = driver.CreateVideoJob();
             Job.InputFile = input;
             Job.OutputFile = output;
@@ -42,6 +50,13 @@ namespace ConsoleConversion
                 Console.WriteLine("{0}% Complete. Remaining {1}", string.Format("{0:0.0#}", Job.PercentComplete * 100), Job.EstimatedTimeToCompletion.ToString(@"h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture));
                 Thread.Sleep(1000);
             }
+
+            #region This region is only for use in this console example as ending the console will leave VLC running
+            if (SignalThread != null)
+            {
+                SignalThread.Abort();
+            }
+            #endregion
         }
 
         #region This region is only for use in this console example as ending the console will leave VLC running
@@ -55,8 +70,15 @@ namespace ConsoleConversion
             return false;
         }
         static ConsoleEventDelegate handler;   // Keeps it from getting garbage collected
-        // Pinvoke
+        private static Thread SignalThread;
+        // PInvoke
         private delegate bool ConsoleEventDelegate(int eventType);
+        /// <summary>
+        /// Windows specific code for dealing with when the console is closed
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="add"></param>
+        /// <returns></returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
         #endregion
