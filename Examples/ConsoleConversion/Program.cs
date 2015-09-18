@@ -50,13 +50,6 @@ namespace ConsoleConversion
                 Console.WriteLine("{0}% Complete. Remaining {1}", string.Format("{0:0.0#}", Job.PercentComplete * 100), Job.EstimatedTimeToCompletion.ToString(@"h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture));
                 Thread.Sleep(1000);
             }
-
-            #region This region is only for use in this console example as ending the console will leave VLC running
-            if (SignalThread != null)
-            {
-                SignalThread.Abort();
-            }
-            #endregion
         }
 
         #region This region is only for use in this console example as ending the console will leave VLC running
@@ -70,7 +63,6 @@ namespace ConsoleConversion
             return false;
         }
         static ConsoleEventDelegate handler;   // Keeps it from getting garbage collected
-        private static Thread SignalThread;
         // PInvoke
         private delegate bool ConsoleEventDelegate(int eventType);
         /// <summary>

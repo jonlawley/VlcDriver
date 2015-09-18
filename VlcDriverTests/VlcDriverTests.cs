@@ -147,5 +147,18 @@ namespace VlcDriverTests
 
             starter.VerifyAllExpectations();
         }
+
+        [Test]
+        public void EnsureWeAllocatePortAllocatorTheStartingPortFromSettings()
+        {
+            var oldPort = VLCDriver.Properties.Settings.Default.StartPort;
+
+            VLCDriver.Properties.Settings.Default.StartPort = -3;
+            var driver = new VlcDriver();
+            var job = driver.CreateAudioJob();
+            var actualPort = job.PortAllocator.StartPort;
+            VLCDriver.Properties.Settings.Default.StartPort = oldPort;
+            Assert.AreEqual(-3, actualPort);
+        }
     }
 }

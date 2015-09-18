@@ -81,6 +81,33 @@ namespace VlcDriverTests
             Assert.AreEqual(expectedArguments, actualArguments);
         }
 
+
+        [Test]
+        public void EnsurePasswordConfigChangeIsUsed()
+        {
+            var audioConfig = MockRepository.GenerateMock<IAudioConfiguration>();
+            audioConfig.Expect(x => x.GetPartArguments()).Return("!!FOO!!");
+
+            var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
+            portAllocator.Expect(x => x.NewPort()).Return(42);
+
+            var job = new VlcAudioJob(audioConfig, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce())
+            {
+                QuitAfer = true
+            };
+            var inputfile = TestUtilities.GetTestFile("NeedinYou2SecWav.wav");
+            job.InputFile = inputfile;
+            var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
+            job.OutputFile = new FileInfo(expectedOutputFile);
+
+            VLCDriver.Properties.Settings.Default.VlcHttpPassword = "duck";
+
+            var expectedArguments = string.Format("-I http --http-password duck --http-port 42 \"{0}{2}NeedinYou2SecWav.wav\" \":sout=#transcode{{vcodec=none,!!FOO!!}}:std{{dst='{1}{2}output.mp3',access=file}}\" vlc://quit", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir(), Path.DirectorySeparatorChar);
+            var actualArguments = job.GetVlcArguments();
+            VLCDriver.Properties.Settings.Default.VlcHttpPassword = "goose";
+            Assert.AreEqual(expectedArguments, actualArguments);
+        }
+
         [Test]
         [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "No Input File Specified for job")]
         public void EnsureExceptionWhenNoInputFileInGiven()

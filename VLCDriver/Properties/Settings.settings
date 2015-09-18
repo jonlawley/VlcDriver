@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VLCDriver.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="VlcHttpPassword" Type="System.String" Scope="Application">
+    <Setting Name="VlcHttpPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">goose</Value>
     </Setting>
     <Setting Name="StartPort" Type="System.Int32" Scope="User">
