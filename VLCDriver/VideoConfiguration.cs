@@ -8,8 +8,8 @@ namespace VLCDriver
         VideoConfiguration.VlcVideoFormat Format { get; set; }
         VideoConfiguration.VideoScale Scale { get; set; }
         int Mpg2Vb { get; set; }
-        int? XScale { get; set; }
-        int? YScale { get; set; }
+        int? XFrameSize { get; set; }
+        int? YFrameSize { get; set; }
     }
 
     public class VideoConfiguration : IConfiguration, IVideoConfiguration
@@ -21,8 +21,8 @@ namespace VLCDriver
         public VideoScale Scale { get; set; }
         public int Mpg2Vb { get; set; }
 
-        public int? XScale { get; set; }
-        public int? YScale { get; set; }
+        public int? XFrameSize { get; set; }
+        public int? YFrameSize { get; set; }
 
         public VideoConfiguration()
         {
@@ -48,7 +48,7 @@ namespace VLCDriver
 
         private string GetScaleArguments()
         {
-            if (!XScale.HasValue && !YScale.HasValue)
+            if (!XFrameSize.HasValue && !YFrameSize.HasValue)
             {
                 if (Scale == VideoScale.None)
                 {
@@ -57,14 +57,14 @@ namespace VLCDriver
                 return string.Format(",scale={0}",ConvertScaleArguments());
             }
             var scaleArguments = string.Empty;
-            scaleArguments += XScale.HasValue != YScale.HasValue ? ",scale=Auto" : ",";
-            if (XScale.HasValue)
+            scaleArguments += XFrameSize.HasValue != YFrameSize.HasValue ? ",scale=Auto" : ",";
+            if (XFrameSize.HasValue)
             {
-                scaleArguments += string.Format(",width={0}", XScale.Value);
+                scaleArguments += string.Format(",width={0}", XFrameSize.Value);
             }
-            if (YScale.HasValue)
+            if (YFrameSize.HasValue)
             {
-                scaleArguments += string.Format(",height={0}", YScale.Value);
+                scaleArguments += string.Format(",height={0}", YFrameSize.Value);
             }
             return scaleArguments;
         }

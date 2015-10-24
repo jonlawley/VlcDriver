@@ -39,7 +39,7 @@ namespace VlcDriverTests
         {
             var videoConfiguration = new VideoConfiguration
             {
-                XScale = 320
+                XFrameSize = 320
             };
 
             var arguments = videoConfiguration.GetPartArguments();
@@ -53,7 +53,7 @@ namespace VlcDriverTests
         {
             var videoConfiguration = new VideoConfiguration
             {
-                YScale = 100
+                YFrameSize = 100
             };
 
             var arguments = videoConfiguration.GetPartArguments();
