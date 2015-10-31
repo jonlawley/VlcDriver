@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IVlcDriver.cs" />
     <Compile Include="IVlcLocator.cs" />
     <Compile Include="TimeSource.cs" />
     <Compile Include="HttpVlcStatusSource.cs" />

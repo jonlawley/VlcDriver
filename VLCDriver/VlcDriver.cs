@@ -7,7 +7,7 @@ using Castle.Windsor;
 
 namespace VLCDriver
 {
-    public class VlcDriver
+    public class VlcDriver : IVlcDriver
     {
         public VlcDriver(IVlcStarter starter = null, IPortAllocator allocator = null, IVlcLocator locator = null)
         {
