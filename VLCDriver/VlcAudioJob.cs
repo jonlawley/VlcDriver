@@ -1,15 +1,18 @@
 ﻿using System;
+using NLog;
 
 namespace VLCDriver
 {
     public class VlcAudioJob : VlcJob
     {
-        public VlcAudioJob(IAudioConfiguration audioConfig, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce, ITimeSouce timeSouce)
-            : base(allocator, statusParser, statusSouce, timeSouce)
+        public VlcAudioJob(IAudioConfiguration audioConfig, IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSouce, ITimeSouce timeSouce, ILogger logger)
+            : base(allocator, statusParser, statusSouce, timeSouce, logger)
         {
             if(audioConfig == null)
             {
-                throw new ArgumentNullException("audioConfig");
+                var argumentNullException = new ArgumentNullException("audioConfig");
+                logger.Error(argumentNullException);
+                throw argumentNullException;
             }
             AudioConfiguration = audioConfig;
         }

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
+using NLog;
 using NUnit.Framework;
 using Rhino.Mocks;
 using VLCDriver;
@@ -33,7 +33,7 @@ namespace VlcDriverTests
         [Test]
         public void TestVlcConversionWithArguments()
         {
-            var driver = new VlcDriver(new VlcStarter());
+            var driver = new VlcDriver(new VlcStarter(MockRepository.GenerateMock<ILogger>()));
             TestUtilities.SetVlcExeLocationOnNonStandardWindowsEnvironments(driver);
 
             var jobArgument = string.Format("-I dummy \"{0}{2}NeedinYou2SecWavMp3128.mp3\" \":sout=#transcode{{vcodec=none,acodec=s16l,ab=128,channels=2,samplerate=44100}}:std{{dst='{1}{2}output.wav',access=file}}\" vlc://quit", TestUtilities.GetTestDir(), TestUtilities.GetTestOutputDir(), Path.DirectorySeparatorChar);
@@ -58,7 +58,7 @@ namespace VlcDriverTests
         [Test]
         public void TestVlcStarts()
         {
-            var driver = new VlcDriver(new VlcStarter());
+            var driver = new VlcDriver(new VlcStarter(MockRepository.GenerateMock<ILogger>()));
             TestUtilities.SetVlcExeLocationOnNonStandardWindowsEnvironments(driver);
             var instance = driver.StartInstance();
             Thread.Sleep(500);
@@ -82,13 +82,13 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce(), MockRepository.GenerateMock<ILogger>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output.mp3");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var driver = new VlcDriver(new VlcStarter());
+            var driver = new VlcDriver(new VlcStarter(MockRepository.GenerateMock<ILogger>()));
             TestUtilities.SetVlcExeLocationOnNonStandardWindowsEnvironments(driver);
             Assert.IsFalse(job.OutputFile.Exists);
             driver.StartJob(job);
@@ -116,13 +116,13 @@ namespace VlcDriverTests
             var portAllocator = MockRepository.GenerateMock<IPortAllocator>();
             portAllocator.Expect(x => x.NewPort()).Return(42);
 
-            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce());
+            var job = new VlcAudioJob(audioConfiguration, portAllocator, MockRepository.GenerateMock<IStatusParser>(), MockRepository.GenerateMock<IVlcStatusSource>(), new TimeSouce(), MockRepository.GenerateMock<ILogger>());
             Assert.AreEqual(VlcJob.JobState.NotStarted, job.State);
             job.InputFile = file;
             var expectedOutputFile = Path.Combine(TestUtilities.GetTestOutputDir(), "output2.wav");
             job.OutputFile = new FileInfo(expectedOutputFile);
 
-            var driver = new VlcDriver(new VlcStarter());
+            var driver = new VlcDriver(new VlcStarter(MockRepository.GenerateMock<ILogger>()));
             TestUtilities.SetVlcExeLocationOnNonStandardWindowsEnvironments(driver);
             Assert.IsFalse(job.OutputFile.Exists, "output file already exists, cannot run test");
             driver.StartJob(job);

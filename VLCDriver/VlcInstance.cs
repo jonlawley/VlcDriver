@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using NLog;
 
 namespace VLCDriver
 {
@@ -13,11 +14,14 @@ namespace VLCDriver
 
     public class VlcInstance : IVlcInstance
     {
+        private readonly ILogger logger;
+
         public delegate void VlcEventHandler(object source, EventArgs e);
         public event VlcEventHandler OnExited;
 
-        public VlcInstance(Process process)
+        public VlcInstance(Process process, ILogger logger)
         {
+            this.logger = logger;
             Process = process;
             SubscribeToEvents();
         }
@@ -48,6 +52,7 @@ namespace VLCDriver
 
         private void Process_Exited(object sender, EventArgs e)
         {
+            logger.Debug("Process id {0} finished.", Process.Id);
             UnsubscribeToEvents();
             if (OnExited != null)
             {

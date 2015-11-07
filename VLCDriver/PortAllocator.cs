@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using NLog;
 
 namespace VLCDriver
 {
@@ -15,9 +16,17 @@ namespace VLCDriver
     /// </summary>
     public class PortAllocator : IPortAllocator
     {
+        private readonly ILogger logger;
+
         /// <summary>
         /// Concurrency Dictionary Value indicates if it's still being Used
         /// </summary>
+
+        public PortAllocator(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         private ConcurrentDictionary<int,bool> UsedPorts
         {
             get { return usedPorts ?? (usedPorts = new ConcurrentDictionary<int, bool>()); }
@@ -48,7 +57,9 @@ namespace VLCDriver
             }
             else
             {
-                throw new InvalidOperationException("Port is not in use");
+                var invalidOperationException = new InvalidOperationException(string.Format("Port {0} is not in use or already released",port));
+                logger.Error(invalidOperationException);
+                throw invalidOperationException;
             }
         }
     }

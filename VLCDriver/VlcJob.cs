@@ -1,13 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using NLog;
 
 namespace VLCDriver
 {
     public abstract class VlcJob
     {
-        protected VlcJob(IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSource, ITimeSouce timeSouce)
+        protected VlcJob(IPortAllocator allocator, IStatusParser statusParser, IVlcStatusSource statusSource, ITimeSouce timeSouce, ILogger logger)
         {
+            this.logger = logger;
             PortAllocator = allocator;
             StatusParser = statusParser;
             StatusSource = statusSource;
@@ -28,18 +30,30 @@ namespace VLCDriver
         private ITimeSouce TimeSouce { get; set; }
         private int AllocatedPort { get; set; }
 
+        protected readonly ILogger logger;
+
         //Todo, Generate New FileName based on input file
 
         public string GetVlcArguments()
         {
             if (InputFile == null)
-                throw new InvalidOperationException("No Input File Specified for job");
+            {
+                var noInputFileSpecifiedForJob = "No Input File Specified for job";
+                logger.Error(noInputFileSpecifiedForJob);
+                throw new InvalidOperationException(noInputFileSpecifiedForJob);
+            }
             if (OutputFile == null)
-                throw new InvalidOperationException("No Output File Specified for job");
+            {
+                var noOutputFileSpecifiedForJob = "No Output File Specified for job";
+                logger.Error(noOutputFileSpecifiedForJob);
+                throw new InvalidOperationException(noOutputFileSpecifiedForJob);
+            }
 
             if (!InputFile.Exists)
             {
-                throw new FileNotFoundException("Input file didn't exist", InputFile.FullName);
+                var fileNotFoundException = new FileNotFoundException("Input file didn't exist", InputFile.FullName);
+                logger.Error(fileNotFoundException);
+                throw fileNotFoundException;
             }
 
             const string vlcQuitString = " vlc://quit";
@@ -77,9 +91,9 @@ namespace VLCDriver
             {
                 xml = StatusSource.GetXml();
             }
-            catch (WebException)
+            catch (WebException ex)
             {
-                Console.WriteLine("Could not connect to vlc http service to get position");
+                logger.Warn(ex, string.Format("Could not connect to vlc http service to get position, Looking in {0}", statusUrl));
                 return;
             }
 

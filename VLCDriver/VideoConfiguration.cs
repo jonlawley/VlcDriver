@@ -1,4 +1,5 @@
 ﻿using System;
+using NLog;
 
 namespace VLCDriver
 {
@@ -41,7 +42,14 @@ namespace VLCDriver
                     vCodecName = string.Format("mp2v,vb={0}", Mpg2Vb);
                     break;
                 default:
-                    throw new InvalidOperationException("Don't know how to support video type");
+                {
+                    var invalidOperationException = new InvalidOperationException("Don't know how to support video type");
+                    if (logger != null)
+                    {
+                        logger.Error(invalidOperationException);
+                    }
+                    throw invalidOperationException;
+                }
             }
             return string.Format("vcodec={0}{1}", vCodecName, GetScaleArguments());
         }
@@ -80,7 +88,14 @@ namespace VLCDriver
                 case VideoScale.quarter:
                     return "0.25";
             }
-            throw new InvalidOperationException("Scale is not yet Supported");
+            var invalidOperationException = new InvalidOperationException("This Scale is not yet Supported");
+            if (logger != null)
+            {
+                logger.Error(invalidOperationException);
+            }
+            throw invalidOperationException;
         }
+
+        private static Logger logger = LogManager.GetCurrentClassLogger();
     }
 }

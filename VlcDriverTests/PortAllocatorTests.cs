@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using NLog;
+using NUnit.Framework;
+using Rhino.Mocks;
 using VLCDriver;
 
 namespace VlcDriverTests
@@ -9,7 +11,7 @@ namespace VlcDriverTests
         [Test]
         public void EnsurePortAllocatorAlwaysAllocatesTheLowestPortNumber()
         {
-            var allocator = new PortAllocator
+            var allocator = new PortAllocator(MockRepository.GenerateMock<ILogger>())
             {
                 StartPort = 1
             };

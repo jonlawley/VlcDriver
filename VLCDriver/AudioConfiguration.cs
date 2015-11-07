@@ -1,4 +1,5 @@
 ﻿using System;
+using NLog;
 
 namespace VLCDriver
 {
@@ -44,7 +45,14 @@ namespace VLCDriver
                 case ConversionFormats.None:
                     return "acodec=none";
             }
-            throw new InvalidOperationException("No format Specified");
+            var invalidOperationException = new InvalidOperationException("No audio format Specified");
+            if (logger != null)
+            {
+                logger.Error(invalidOperationException);
+            }
+            throw invalidOperationException;
         }
+
+        private static Logger logger = LogManager.GetCurrentClassLogger();
     }
 }
