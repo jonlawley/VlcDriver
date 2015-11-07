@@ -24,7 +24,11 @@ I wanted to create a library which I can use it these various projects and thoug
 
 ## Installation
 
-Solution was written in and compiles and builds in Visual Studio 2013 .Net 4.5 and has been tested in Visual Studio 2015 RC. Nuget will handle installation of libraries.
+Solution was written in and compiles and builds in Visual Studio 2015 .Net 4.5. Nuget will handle installation of libraries.
+
+## Logging
+
+Logging has been implemented using NLog https://github.com/NLog .  See the console app example in this solution for a basic example.
 
 ## Mono
 I've taken quite some time to ensure this project will work on Mono. This has been tested on Ubuntu 14.04, Mono JIT compiler version 4.0.3 and MonoDevelop 5.9.5.
