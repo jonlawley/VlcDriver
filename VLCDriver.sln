@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VLCDriver", "VLCDriver\VLCDriver.csproj", "{38E98453-F4C7-4473-8945-C4864CEECA42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VLCDriver", "VLCDriver\VLCDriver.csproj", "{01D9F63A-F126-4FA9-9E1E-A63EC5090398}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{C3DBC874-68E8-49D1-8FA5-2E8CC604F4EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VlcDriverTests", "VlcDriverTests\VlcDriverTests.csproj", "{A5515A6C-C98D-4BD6-8D00-6A1ED2D185E4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{892E9B74-9DD9-4C9B-A376-7BB98BFB5104}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleConversion", "Examples\ConsoleConversion\ConsoleConversion.csproj", "{F004EC12-BC2B-4D25-A1FD-9767386AF437}"
 EndProject
@@ -17,10 +17,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{38E98453-F4C7-4473-8945-C4864CEECA42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E98453-F4C7-4473-8945-C4864CEECA42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38E98453-F4C7-4473-8945-C4864CEECA42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38E98453-F4C7-4473-8945-C4864CEECA42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D9F63A-F126-4FA9-9E1E-A63EC5090398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D9F63A-F126-4FA9-9E1E-A63EC5090398}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D9F63A-F126-4FA9-9E1E-A63EC5090398}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D9F63A-F126-4FA9-9E1E-A63EC5090398}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5515A6C-C98D-4BD6-8D00-6A1ED2D185E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5515A6C-C98D-4BD6-8D00-6A1ED2D185E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5515A6C-C98D-4BD6-8D00-6A1ED2D185E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +34,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F004EC12-BC2B-4D25-A1FD-9767386AF437} = {892E9B74-9DD9-4C9B-A376-7BB98BFB5104}
+		{F004EC12-BC2B-4D25-A1FD-9767386AF437} = {C3DBC874-68E8-49D1-8FA5-2E8CC604F4EF}
 	EndGlobalSection
 EndGlobal

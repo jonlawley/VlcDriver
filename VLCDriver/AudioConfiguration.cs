@@ -16,7 +16,7 @@ namespace VLCDriver
     {
         public AudioConfiguration()
         {
-            Format = ConversionFormats.Wav;
+            Format = AudioConfiguration.ConversionFormats.Wav;
             AudioBitrateInkbps = 192;
             SampleRateHertz = 44100;
             Channels = 2;
@@ -24,7 +24,7 @@ namespace VLCDriver
 
         public enum ConversionFormats { Mp3, Wav , Mpg, None}
 
-        public ConversionFormats Format { get; set; }
+        public AudioConfiguration.ConversionFormats Format { get; set; }
 
         public int AudioBitrateInkbps { get; set; }
 
