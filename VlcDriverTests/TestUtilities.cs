@@ -28,7 +28,7 @@ namespace VlcDriverTests
             return Path.Combine(assemblyFolder, TestConversionOutput);
         }
 
-        private static string GetProjectDir()
+        public static string GetProjectDir()
         {
             var projectDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
             if (projectDirectory != null)
